@@ -7,8 +7,9 @@ window.onload = function () {
     var delay = 100;
     var snakee;
     var applee;
-    var widthInBlocks = canvasWidth/blockSize;
-    var heightInBlocks = canvasHeight/blockSize;
+    var widthInBlocks = canvasWidth / blockSize;
+    var heightInBlocks = canvasHeight / blockSize;
+    var score;
 
     init();
 
@@ -16,27 +17,59 @@ window.onload = function () {
         var canvas = document.createElement('canvas');
         canvas.width = canvasWidth;
         canvas.height = canvasHeight;
-        canvas.style.border = "2px solid";
-        //canvas.style.borderRadius = "10px";
-        canvas.style.background = "#58C8F3";
+        canvas.style.border = "20px solid";
+        canvas.style.borderRadius = "10px";
+        canvas.style.backgroundColor = "#fff";
+        canvas.style.display = "block";
+        canvas.style.margin = "auto";
         document.body.appendChild(canvas);
         ctx = canvas.getContext('2d');
         snakee = new Snake([[6, 4], [5, 4], [4, 4]], "right");
         applee = new Apple([10, 10]);
+        score = 0;
         refreshCanvas();
     }
 
     function refreshCanvas() {
         snakee.advance();
-        if(snakee.checkCollision()) {
-            //GAME OVER
+        if (snakee.checkCollision()) {
+            gameOver();
         }
         else {
+            if (snakee.isEatingApple(applee)) {
+                score++;
+                snakee.eatApple = true;
+                do {
+                    applee.setNewPosition();
+                }
+                while (applee.isOnSnake(snakee))
+            }
             ctx.clearRect(0, 0, canvasWidth, canvasHeight);
             snakee.draw();
             applee.draw();
+            drawScore();
             setTimeout(refreshCanvas, delay);
         }
+    }
+
+    function gameOver() {
+        ctx.save();
+        ctx.fillText("Game Over", (canvasWidth / 2), (canvasHeight / 2));
+        ctx.fillText("Espace : Nouvelle Partie", (canvasWidth / 2), (canvasHeight / 1.9));
+        ctx.restore();
+    }
+
+    function restart() {
+        snakee = new Snake([[6, 4], [5, 4], [4, 4]], "right");
+        applee = new Apple([10, 10]);
+        score = 0;
+        refreshCanvas();
+    }
+
+    function drawScore() {
+        ctx.save();
+        ctx.fillText(score.toString(), 5, (canvasHeight - 5));
+        ctx.restore();
     }
 
     function drawBlock(ctx, position) {
@@ -48,6 +81,7 @@ window.onload = function () {
     function Snake(body, direction) {
         this.body = body;
         this.direction = direction;
+        this.eatApple = false;
         this.draw = function () {
             ctx.save();
             ctx.fillStyle = "#EDA4B3";
@@ -74,14 +108,17 @@ window.onload = function () {
                     nextPosition[1] -= 1;
                     break;
                 default:
-                    throw("Invalid Direction");
+                    throw ("Invalid Direction");
 
             }
             this.body.unshift(nextPosition);
-            this.body.pop();
+            if (!this.eatApple)
+                this.body.pop();
+            else
+                this.eatApple = false;
         };
 
-        this.setDirection = function(newDirection) {
+        this.setDirection = function (newDirection) {
             var allowedDirections;
             switch (this.direction) {
                 case "left":
@@ -100,7 +137,7 @@ window.onload = function () {
             }
         };
 
-        this.checkCollision = function() {
+        this.checkCollision = function () {
             var wallCollision = false;
             var snakeCollision = false;
             var head = this.body[0];
@@ -109,8 +146,8 @@ window.onload = function () {
             var snakeY = head[1];
             var minX = 0;
             var minY = 0;
-            var maxX = widthInBlocks -1;
-            var maxY = heightInBlocks -1;
+            var maxX = widthInBlocks - 1;
+            var maxY = heightInBlocks - 1;
             var isNotBetweenHorizontalWalls = snakeX < minX || snakeX > maxX;
             var isNotBetweenVerticalWalls = snakeY < minY || snakeY > maxY;
 
@@ -123,24 +160,46 @@ window.onload = function () {
                     snakeCollision = true;
                 }
             }
-        return wallCollision || snakeCollision;
+            return wallCollision || snakeCollision;
         };
+
+        this.isEatingApple = appleToEat => {
+            var head = this.body[0];
+            if (head[0] === appleToEat.position[0] && head[1] === appleToEat.position[1])
+                return true;
+            else
+                return false;
+        };
+
 
     }
 
     function Apple(position) {
         this.position = position;
-        this.draw = function() {
+        this.draw = function () {
             ctx.save();
-            ctx.fillStyle = "#fff";
+            ctx.fillStyle = "#58C8F3";
             ctx.beginPath();
-            var radius = blockSize/2;
-            var x = position[0]*blockSize + radius;
-            var y = position[1]*blockSize + radius;
-            ctx.arc(x, y, radius, 0, Math.PI*2, true);
+            var radius = blockSize / 2;
+            var x = this.position[0] * blockSize + radius;
+            var y = this.position[1] * blockSize + radius;
+            ctx.arc(x, y, radius, 0, Math.PI * 2, true);
             ctx.fill();
             ctx.restore();
-
+        };
+        this.setNewPosition = function () {
+            var newX = Math.round(Math.random() * (widthInBlocks - 1));
+            var newY = Math.round(Math.random() * (heightInBlocks - 1));
+            this.position = [newX, newY];
+        };
+        this.isOnSnake = function (snakeToCheck) {
+            var isOnSnake = false;
+            for (i = 0; i < snakeToCheck.body.length; i++) {
+                if (this.position[0] === snakeToCheck.body[i][0] && this.position[1] === snakeToCheck.body[i][1]) {
+                    isOnSnake = true;
+                }
+            }
+            return isOnSnake;
         };
     }
 
@@ -160,6 +219,9 @@ window.onload = function () {
             case 40:
                 newDirection = "down";
                 break;
+            case 32:
+                restart();
+                return;
             default:
                 return;
         }
