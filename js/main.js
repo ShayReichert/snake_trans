@@ -1,5 +1,7 @@
 window.onload = function () {
 
+    this.document.body.style.background = "url('./img/drapeautrans_opa.png')";
+
     var canvasWidth = 900;
     var canvasHeight = 600;
     var blockSize = 30;
@@ -19,13 +21,14 @@ window.onload = function () {
         canvas.height = canvasHeight;
         canvas.style.border = "20px solid";
         canvas.style.borderRadius = "10px";
-        canvas.style.backgroundColor = "#fff";
+        canvas.style.background = "#fff";
         canvas.style.display = "block";
         canvas.style.margin = "auto";
         document.body.appendChild(canvas);
         ctx = canvas.getContext('2d');
         snakee = new Snake([[6, 4], [5, 4], [4, 4]], "right");
         applee = new Apple([10, 10]);
+        //applee.style.background = "url('./img/drapeautrans_opa.png')";
         score = 0;
         refreshCanvas();
     }
@@ -54,8 +57,12 @@ window.onload = function () {
 
     function gameOver() {
         ctx.save();
-        ctx.fillText("Game Over", (canvasWidth / 2), (canvasHeight / 2));
-        ctx.fillText("Espace : Nouvelle Partie", (canvasWidth / 2), (canvasHeight / 1.9));
+        var centerX = canvasWidth / 2;
+        var centerY = canvasHeight / 2;
+        ctx.textBaseline = "middle";
+        ctx.fillText("Game Over", centerX, centerY );
+        ctx.fillText("Espace : Nouvelle Partie", centerX, centerY+10);
+        ctx.textAlign = "center";
         ctx.restore();
     }
 
@@ -68,7 +75,10 @@ window.onload = function () {
 
     function drawScore() {
         ctx.save();
-        ctx.fillText(score.toString(), 5, (canvasHeight - 5));
+        ctx.font = "bold 150px sans-serif";
+        ctx.fillStyle = "#ccccccc7";
+        ctx.textBaseline = "middle";
+        ctx.fillText(score.toString(), 5, (canvasHeight-60));
         ctx.restore();
     }
 
@@ -85,6 +95,7 @@ window.onload = function () {
         this.draw = function () {
             ctx.save();
             ctx.fillStyle = "#EDA4B3";
+            
 
             for (var i = 0; i < this.body.length; i++) {
                 drawBlock(ctx, this.body[i]);
