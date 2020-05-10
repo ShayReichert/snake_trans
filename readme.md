@@ -1,5 +1,21 @@
-# Creer un package.json et lancer un script sass
 
+# Snake Queer - Vanilla JS
+## Famous snake game with trans flag colors :)
+[Jouer au Snake ici !](https://shayreichert.github.io/snake_trans/)
+![Snake Trans Queer](screen_snake.png) 
+
+
+
+
+
+
+
+
+
+
+MEMO :
+
+- Creer un package.json et lancer un script sass
 Créer un package.json : npm init
     (installer sass : npm install sass -g puis sass --version)
 
