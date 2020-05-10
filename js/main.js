@@ -12,6 +12,7 @@ window.onload = function () {
     var widthInBlocks = canvasWidth / blockSize;
     var heightInBlocks = canvasHeight / blockSize;
     var score;
+    var timeOut;
 
     init();
 
@@ -19,16 +20,15 @@ window.onload = function () {
         var canvas = document.createElement('canvas');
         canvas.width = canvasWidth;
         canvas.height = canvasHeight;
-        canvas.style.border = "20px solid";
+        canvas.style.border = "20px solid #242424b4"; 
         canvas.style.borderRadius = "10px";
-        canvas.style.background = "#fff";
+        canvas.style.background = "#ececec";
         canvas.style.display = "block";
         canvas.style.margin = "auto";
         document.body.appendChild(canvas);
         ctx = canvas.getContext('2d');
         snakee = new Snake([[6, 4], [5, 4], [4, 4]], "right");
         applee = new Apple([10, 10]);
-        //applee.style.background = "url('./img/drapeautrans_opa.png')";
         score = 0;
         refreshCanvas();
     }
@@ -37,8 +37,7 @@ window.onload = function () {
         snakee.advance();
         if (snakee.checkCollision()) {
             gameOver();
-        }
-        else {
+        } else {
             if (snakee.isEatingApple(applee)) {
                 score++;
                 snakee.eatApple = true;
@@ -48,10 +47,10 @@ window.onload = function () {
                 while (applee.isOnSnake(snakee))
             }
             ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+            drawScore();
             snakee.draw();
             applee.draw();
-            drawScore();
-            setTimeout(refreshCanvas, delay);
+            timeOut = setTimeout(refreshCanvas, delay);
         }
     }
 
@@ -59,10 +58,15 @@ window.onload = function () {
         ctx.save();
         var centerX = canvasWidth / 2;
         var centerY = canvasHeight / 2;
-        ctx.textBaseline = "middle";
-        ctx.fillText("Game Over", centerX, centerY );
-        ctx.fillText("Espace : Nouvelle Partie", centerX, centerY+10);
+        ctx.font = "bold 60px sans-serif";
+        ctx.fillStyle = "#000";
         ctx.textAlign = "center";
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = 8;
+        ctx.strokeText("Game Over", centerX, centerY);
+        ctx.fillText("Game Over", centerX, centerY);
+        ctx.font = "bold 20px sans-serif";
+        ctx.fillText("Nouvelle Partie : Espace", centerX, centerY + 50);
         ctx.restore();
     }
 
@@ -70,6 +74,7 @@ window.onload = function () {
         snakee = new Snake([[6, 4], [5, 4], [4, 4]], "right");
         applee = new Apple([10, 10]);
         score = 0;
+        clearTimeout(timeOut);
         refreshCanvas();
     }
 
@@ -77,8 +82,7 @@ window.onload = function () {
         ctx.save();
         ctx.font = "bold 150px sans-serif";
         ctx.fillStyle = "#ccccccc7";
-        ctx.textBaseline = "middle";
-        ctx.fillText(score.toString(), 5, (canvasHeight-60));
+        ctx.fillText(score.toString(), 5, (canvasHeight-10));
         ctx.restore();
     }
 
@@ -95,7 +99,6 @@ window.onload = function () {
         this.draw = function () {
             ctx.save();
             ctx.fillStyle = "#EDA4B3";
-            
 
             for (var i = 0; i < this.body.length; i++) {
                 drawBlock(ctx, this.body[i]);
