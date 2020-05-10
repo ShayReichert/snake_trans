@@ -1,6 +1,7 @@
 
 # Snake Queer - Vanilla JS
 ## Famous snake game with trans flag colors :)
+[Jouer au Snake ici ! ](https://shayreichert.github.io/snake_trans/)
 [![Snake Trans Queer](screen_snake.png) ](https://shayreichert.github.io/snake_trans/)
 
 
@@ -13,6 +14,14 @@
 
 
 
+
+
+
+
+
+
+
+////////
 MEMO :
 
 - Creer un package.json et lancer un script sass
@@ -26,7 +35,3 @@ Définir un script Sass :
 
 Enregistrer, puis lancer Sass 
 npm run sass
-
-[Jouer au Snake ici !](https://shayreichert.github.io/snake_trans/)
-![Snake Trans Queer](screen_snake.png) 
-
