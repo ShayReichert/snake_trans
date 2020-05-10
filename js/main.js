@@ -106,7 +106,7 @@ window.onload = function () {
             ctx.restore();
         };
 
-        this.advance = function () {
+        this.advance = () => {
             var nextPosition = this.body[0].slice();
             switch (this.direction) {
                 case "left":
@@ -132,7 +132,7 @@ window.onload = function () {
                 this.eatApple = false;
         };
 
-        this.setDirection = function (newDirection) {
+        this.setDirection = newDirection => {
             var allowedDirections;
             switch (this.direction) {
                 case "left":
@@ -151,7 +151,7 @@ window.onload = function () {
             }
         };
 
-        this.checkCollision = function () {
+        this.checkCollision = () => {
             var wallCollision = false;
             var snakeCollision = false;
             var head = this.body[0];
@@ -184,8 +184,6 @@ window.onload = function () {
             else
                 return false;
         };
-
-
     }
 
     function Apple(position) {
@@ -241,6 +239,4 @@ window.onload = function () {
         }
         snakee.setDirection(newDirection);
     }
-
-
 }
