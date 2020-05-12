@@ -26,16 +26,15 @@
 
 
 ////////
-MEMO :
+MEMO pour lancer Sass depuis son éditeur de code :
 
-- Creer un package.json et lancer un script sass
-Créer un package.json : npm init
-    (installer sass : npm install sass -g puis sass --version)
+- Créer un package.json : npm init
+(- Installer Sass si nécessaire : npm install sass -g puis sass --version)
 
-Définir un script Sass :
+- Ajouter un script Sass au .json :
 "scripts": {
   "sass": "sass --watch ./css/style.scss:./css/style.css"
 },
 
-Enregistrer, puis lancer Sass 
+- Enregistrer le .json, puis lancer Sass :
 npm run sass
