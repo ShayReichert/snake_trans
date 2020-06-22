@@ -11,5 +11,5 @@
 
 
 ## Update 06-22-2020
-* Diffulty level : Gradual increase (snake speed)
+* Difficulty level : Gradual increase (snake speed)
 * Refactoring JS
